@@ -144,7 +144,35 @@
 
   /* ORDER */
   .order-section{padding:100px 8vw;max-width:1100px;margin:0 auto;}
-  .offer-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:60px 0 48px;}
+  .offer-grid{display:flex;flex-direction:column;gap:12px;margin:40px 0 40px;}
+  .offer-card{border:2px solid rgba(0,0,0,.08);border-radius:16px;padding:16px 20px;cursor:pointer;transition:all .2s;position:relative;background:#fff;display:flex;align-items:center;gap:16px;text-align:left;}
+  .offer-card:hover{border-color:var(--sage);}
+  .offer-card.active{border:2px solid var(--forest);background:var(--light-sage);}
+  .offer-card.popular{border-color:var(--sage);}
+  .offer-radio{width:22px;height:22px;border-radius:50%;border:2px solid #ccc;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .2s;}
+  .offer-card.active .offer-radio{border-color:var(--forest);background:var(--forest);}
+  .offer-radio-dot{width:8px;height:8px;border-radius:50%;background:#fff;opacity:0;transition:opacity .2s;}
+  .offer-card.active .offer-radio-dot{opacity:1;}
+  .offer-card-body{flex:1;}
+  .offer-card-top{display:flex;align-items:center;gap:8px;margin-bottom:3px;}
+  .offer-card-name{font-weight:700;font-size:15px;color:var(--dark);}
+  .offer-card-tag{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border-radius:100px;background:var(--forest);color:#fff;}
+  .offer-card-tag.gold{background:var(--gold);color:var(--dark);}
+  .offer-card-sub{font-size:12px;color:#888;}
+  .offer-card-price{text-align:right;flex-shrink:0;}
+  .offer-card-price-main{font-family:'Playfair Display',serif;font-size:24px;font-weight:900;color:var(--forest);line-height:1;}
+  .offer-card-price-old{font-size:11px;color:#bbb;text-decoration:line-through;}
+  .offer-card-price-per{font-size:10px;color:var(--sage);font-weight:600;}
+  .offer-check{display:none;}
+  .offer-qty{display:none;}
+  .offer-name{display:none;}
+  .offer-price-old{display:none;}
+  .offer-price{display:none;}
+  .offer-save{display:none;}
+  .offer-per{display:none;}
+  .offer-shipping{display:none;}
+  .popular-badge{position:absolute;top:-11px;left:20px;transform:none;background:var(--forest);color:#fff;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:4px 12px;border-radius:100px;white-space:nowrap;}
+  .offer-swipe-hint{display:none;}
   .offer-card{border:2px solid rgba(0,0,0,.1);border-radius:20px;padding:26px 18px;text-align:center;cursor:pointer;transition:all .25s;position:relative;background:#fff;margin-bottom:18px;}
   .offer-card:hover{border-color:var(--sage);transform:translateY(-2px);}
   .offer-card.active{border:3px solid var(--forest);background:var(--light-sage);transform:translateY(-4px);box-shadow:0 12px 40px rgba(45,80,22,.25);}
@@ -192,7 +220,8 @@
   .sticky-cta a{display:block;background:var(--gold);color:var(--dark);text-align:center;padding:14px;border-radius:10px;font-weight:700;font-size:16px;text-decoration:none;font-family:'Playfair Display',serif;}
   @media(max-width:600px){.sticky-cta{display:block;}}
 
-  /* FAQ */
+  .offer-swipe-hint{display:none;text-align:center;font-size:12px;color:#aaa;margin-bottom:8px;letter-spacing:.03em;}
+  @media(max-width:960px){.offer-swipe-hint{display:block;}}
   .faq-item{background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.06);}
   .faq-q{display:flex;justify-content:space-between;align-items:center;padding:20px 24px;cursor:pointer;font-weight:600;font-size:16px;color:var(--dark);transition:background .2s;}
   .faq-q:hover{background:var(--light-sage);}
@@ -213,7 +242,6 @@
     .solution{grid-template-columns:1fr;padding:60px 5vw;gap:32px;}
     .reviews-grid{grid-template-columns:1fr;}
     .tech-grid,.tech-row2{grid-template-columns:1fr;}
-    .offer-grid{grid-template-columns:1fr 1fr;}
     .form-grid{grid-template-columns:1fr;}
     .form-group.span2{grid-column:span 1;}
     .form-wrap{padding:24px 16px;}
@@ -232,7 +260,6 @@
     .form-order-summary{flex-direction:column;gap:6px;text-align:center;}
   }
   @media(max-width:480px){
-    .offer-grid{grid-template-columns:1fr;}
     .mobile-hero-title{font-size:28px;}
     .popular-badge{font-size:10px;padding:4px 10px;}
   }
@@ -444,48 +471,67 @@
     <div class="section-eyebrow">Pide la tuya hoy</div>
     <h2 class="section-title">Elige tu pack y empieza<br>a dormir <em style="font-style:italic;color:var(--forest);">de verdad</em></h2>
   </div>
+  <div class="offer-swipe-hint"></div>
   <div class="offer-grid">
     <div class="offer-card" id="offer-1" onclick="selectOffer(1)">
-      <div class="offer-check">✓</div>
-      <div class="offer-qty">1 Almohada</div>
-      <div class="offer-name">Individual</div>
-      <div class="offer-price-old">79,99€</div>
-      <div class="offer-price"><span>€</span>59<span>.00</span></div>
-      <div class="offer-per" style="color:#aaa;">59,00€ por almohada</div>
-      <div class="offer-shipping">+ Envío gratis</div>
+      <div class="offer-radio"><div class="offer-radio-dot"></div></div>
+      <div class="offer-card-body">
+        <div class="offer-card-top">
+          <span class="offer-card-name">1 Almohada</span>
+        </div>
+        <div class="offer-card-sub">Individual · Envío gratis</div>
+      </div>
+      <div class="offer-card-price">
+        <div class="offer-card-price-old">79,99€</div>
+        <div class="offer-card-price-main">59€</div>
+        <div class="offer-card-price-per">59€/almohada</div>
+      </div>
     </div>
     <div class="offer-card popular active" id="offer-2" onclick="selectOffer(2)">
-      <div class="offer-check">✓</div>
       <div class="popular-badge">⭐ MÁS POPULAR</div>
-      <div class="offer-qty">2 Almohadas</div>
-      <div class="offer-name">Pack Pareja</div>
-      <div class="offer-price-old">118,00€</div>
-      <div class="offer-price"><span>€</span>79<span>.00</span></div>
-      <div class="offer-save">Ahorras 39€</div>
-      <div class="offer-per">39,50€ por almohada</div>
-      <div class="offer-shipping">+ Envío gratis</div>
+      <div class="offer-radio"><div class="offer-radio-dot"></div></div>
+      <div class="offer-card-body">
+        <div class="offer-card-top">
+          <span class="offer-card-name">2 Almohadas</span>
+          <span class="offer-card-tag">Pack Pareja</span>
+        </div>
+        <div class="offer-card-sub">Ahorras 39€ · Envío gratis</div>
+      </div>
+      <div class="offer-card-price">
+        <div class="offer-card-price-old">118€</div>
+        <div class="offer-card-price-main">79€</div>
+        <div class="offer-card-price-per">39,50€/almohada</div>
+      </div>
     </div>
     <div class="offer-card" id="offer-3" onclick="selectOffer(3)">
-      <div class="offer-check">✓</div>
-      <div class="popular-badge" style="background:var(--gold);color:var(--dark);">🎁 3+1 GRATIS</div>
-      <div class="offer-qty">3 Almohadas + 1 Regalo</div>
-      <div class="offer-name">Pack Familia</div>
-      <div class="offer-price-old">236,00€</div>
-      <div class="offer-price"><span>€</span>99<span>.00</span></div>
-      <div class="offer-save">Ahorras 137€ 🔥</div>
-      <div class="offer-per">24,75€ por almohada</div>
-      <div class="offer-shipping">+ Envío gratis</div>
+      <div class="offer-radio"><div class="offer-radio-dot"></div></div>
+      <div class="offer-card-body">
+        <div class="offer-card-top">
+          <span class="offer-card-name">3 + 1 GRATIS</span>
+          <span class="offer-card-tag gold">🎁 Familia</span>
+        </div>
+        <div class="offer-card-sub">Ahorras 137€ · Envío gratis</div>
+      </div>
+      <div class="offer-card-price">
+        <div class="offer-card-price-old">236€</div>
+        <div class="offer-card-price-main">99€</div>
+        <div class="offer-card-price-per">24,75€/almohada 🔥</div>
+      </div>
     </div>
-    <div class="offer-card" id="offer-4" onclick="selectOffer(4)" style="border-color:var(--gold);background:linear-gradient(135deg,#fffdf7,#fff9ee);">
-      <div class="offer-check" style="background:var(--gold);color:var(--dark);">✓</div>
-      <div class="popular-badge" style="background:var(--dark);color:var(--gold);">🏆 5+1 GRATIS</div>
-      <div class="offer-qty">5 Almohadas + 1 Regalo</div>
-      <div class="offer-name">Pack Total</div>
-      <div class="offer-price-old">354,00€</div>
-      <div class="offer-price" style="color:var(--gold);"><span>€</span>129<span>.00</span></div>
-      <div class="offer-save" style="color:var(--gold);">Ahorras 225€ 💎</div>
-      <div class="offer-per">21,50€ por almohada</div>
-      <div class="offer-shipping">+ Envío prioritario gratis</div>
+    <div class="offer-card" id="offer-4" onclick="selectOffer(4)">
+      <div class="offer-radio"><div class="offer-radio-dot"></div></div>
+      <div class="offer-card-body">
+        <div class="offer-card-top">
+          <span class="offer-card-name">5 + 1 GRATIS</span>
+          <span class="offer-card-tag gold">🏆 Total</span>
+        </div>
+        <div class="offer-card-sub">Ahorras 225€ · Envío prioritario</div>
+      </div>
+      <div class="offer-card-price">
+        <div class="offer-card-price-old">354€</div>
+        <div class="offer-card-price-main" style="color:var(--gold);">129€</div>
+        <div class="offer-card-price-per" style="color:var(--gold);">21,50€/almohada 💎</div>
+      </div>
     </div>
   </div>
 
@@ -699,7 +745,16 @@
     if(!isOpen) item.classList.add('open');
   }
 
-  // RECENT ORDERS TICKER - duplicate content for seamless loop
+  // AUTO-SCROLL offers to Pack Pareja on mobile
+  if(window.innerWidth < 960){
+    setTimeout(()=>{
+      const grid=document.querySelector('.offer-grid');
+      const card2=document.getElementById('offer-2');
+      if(grid && card2){
+        grid.scrollLeft=card2.offsetLeft - (grid.offsetWidth/2) + (card2.offsetWidth/2);
+      }
+    },300);
+  }
   const ticker=document.getElementById('ticker-content');
   if(ticker) ticker.innerHTML+=ticker.innerHTML;
 </script>
