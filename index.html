@@ -145,9 +145,12 @@
   /* ORDER */
   .order-section{padding:100px 8vw;max-width:1100px;margin:0 auto;}
   .offer-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:60px 0 48px;}
-  .offer-card{border:2px solid rgba(0,0,0,.1);border-radius:20px;padding:26px 18px;text-align:center;cursor:pointer;transition:all .25s;position:relative;background:#fff;}
-  .offer-card:hover,.offer-card.active{border-color:var(--forest);box-shadow:0 8px 32px rgba(45,80,22,.15);transform:translateY(-4px);}
-  .offer-card.popular{border-color:var(--forest);background:var(--light-sage);}
+  .offer-card{border:2px solid rgba(0,0,0,.1);border-radius:20px;padding:26px 18px;text-align:center;cursor:pointer;transition:all .25s;position:relative;background:#fff;margin-bottom:18px;}
+  .offer-card:hover{border-color:var(--sage);transform:translateY(-2px);}
+  .offer-card.active{border:3px solid var(--forest);background:var(--light-sage);transform:translateY(-4px);box-shadow:0 12px 40px rgba(45,80,22,.25);}
+  .offer-card.active .offer-check{display:flex;}
+  .offer-check{display:none;position:absolute;top:12px;right:12px;width:24px;height:24px;background:var(--forest);color:#fff;border-radius:50%;align-items:center;justify-content:center;font-size:13px;font-weight:900;}
+  .offer-card.popular{border-color:var(--sage);}
   .popular-badge{position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--forest);color:#fff;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:5px 14px;border-radius:100px;white-space:nowrap;}
   .offer-qty{font-size:11px;color:#888;font-weight:600;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;}
   .offer-name{font-family:'Playfair Display',serif;font-size:17px;font-weight:700;margin-bottom:6px;}
@@ -189,8 +192,17 @@
   .sticky-cta a{display:block;background:var(--gold);color:var(--dark);text-align:center;padding:14px;border-radius:10px;font-weight:700;font-size:16px;text-decoration:none;font-family:'Playfair Display',serif;}
   @media(max-width:600px){.sticky-cta{display:block;}}
 
-  .fade-in{opacity:0;transform:translateY(30px);transition:opacity .7s ease,transform .7s ease;}
-  .fade-in.visible{opacity:1;transform:translateY(0);}
+  /* FAQ */
+  .faq-item{background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.06);}
+  .faq-q{display:flex;justify-content:space-between;align-items:center;padding:20px 24px;cursor:pointer;font-weight:600;font-size:16px;color:var(--dark);transition:background .2s;}
+  .faq-q:hover{background:var(--light-sage);}
+  .faq-arrow{font-size:12px;color:var(--forest);transition:transform .3s;}
+  .faq-a{display:none;padding:0 24px 20px;font-size:14px;color:#666;line-height:1.7;}
+  .faq-item.open .faq-a{display:block;}
+  .faq-item.open .faq-arrow{transform:rotate(180deg);}
+
+  @keyframes ticker{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
+  @keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.5;transform:scale(1.4);}}
 
   @media(max-width:960px){
     .mobile-hero{display:flex;}
@@ -412,12 +424,29 @@
 
 <!-- ORDER -->
 <section class="order-section" id="pedido">
+
+  <!-- URGENCY BAR -->
+  <div style="background:#fff3cd;border:1px solid #ffc107;border-radius:12px;padding:14px 20px;margin-bottom:32px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
+    <div style="display:flex;align-items:center;gap:10px;font-weight:700;font-size:15px;color:#856404;">
+      <span style="font-size:20px;">⚠️</span>
+      Solo quedan <span id="stock-count" style="color:var(--red);font-size:18px;margin:0 4px;">7</span> unidades en stock
+    </div>
+    <div style="font-size:13px;color:#856404;font-weight:500;">La oferta termina en: <strong id="countdown" style="color:var(--red);font-size:16px;">23:59:59</strong></div>
+  </div>
+
+  <!-- LIVE VIEWERS -->
+  <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:32px;font-size:14px;color:#666;">
+    <span style="display:inline-block;width:8px;height:8px;background:#22c55e;border-radius:50%;animation:pulse 1.5s infinite;"></span>
+    <span><strong id="viewer-count">23</strong> personas están viendo esto ahora mismo</span>
+  </div>
+
   <div style="text-align:center;">
     <div class="section-eyebrow">Pide la tuya hoy</div>
     <h2 class="section-title">Elige tu pack y empieza<br>a dormir <em style="font-style:italic;color:var(--forest);">de verdad</em></h2>
   </div>
   <div class="offer-grid">
     <div class="offer-card" id="offer-1" onclick="selectOffer(1)">
+      <div class="offer-check">✓</div>
       <div class="offer-qty">1 Almohada</div>
       <div class="offer-name">Individual</div>
       <div class="offer-price-old">79,99€</div>
@@ -426,6 +455,7 @@
       <div class="offer-shipping">+ Envío gratis</div>
     </div>
     <div class="offer-card popular active" id="offer-2" onclick="selectOffer(2)">
+      <div class="offer-check">✓</div>
       <div class="popular-badge">⭐ MÁS POPULAR</div>
       <div class="offer-qty">2 Almohadas</div>
       <div class="offer-name">Pack Pareja</div>
@@ -436,6 +466,7 @@
       <div class="offer-shipping">+ Envío gratis</div>
     </div>
     <div class="offer-card" id="offer-3" onclick="selectOffer(3)">
+      <div class="offer-check">✓</div>
       <div class="popular-badge" style="background:var(--gold);color:var(--dark);">🎁 3+1 GRATIS</div>
       <div class="offer-qty">3 Almohadas + 1 Regalo</div>
       <div class="offer-name">Pack Familia</div>
@@ -446,6 +477,7 @@
       <div class="offer-shipping">+ Envío gratis</div>
     </div>
     <div class="offer-card" id="offer-4" onclick="selectOffer(4)" style="border-color:var(--gold);background:linear-gradient(135deg,#fffdf7,#fff9ee);">
+      <div class="offer-check" style="background:var(--gold);color:var(--dark);">✓</div>
       <div class="popular-badge" style="background:var(--dark);color:var(--gold);">🏆 5+1 GRATIS</div>
       <div class="offer-qty">5 Almohadas + 1 Regalo</div>
       <div class="offer-name">Pack Total</div>
@@ -512,6 +544,85 @@
   </div>
 </section>
 
+<!-- RECENT ORDERS TICKER -->
+<div id="orders-ticker" style="background:var(--forest);color:#fff;padding:12px 20px;font-size:13px;overflow:hidden;position:relative;">
+  <div id="ticker-content" style="white-space:nowrap;display:inline-block;animation:ticker 20s linear infinite;">
+    🛒 María de Madrid acaba de pedir el Pack Pareja &nbsp;&nbsp;&nbsp; 🛒 Carlos de Barcelona pidió el Pack Familia (3+1) &nbsp;&nbsp;&nbsp; 🛒 Laura de Sevilla acaba de pedir 2 almohadas &nbsp;&nbsp;&nbsp; 🛒 Pedro de Valencia pidió el Pack Total &nbsp;&nbsp;&nbsp; 🛒 Isabel de Málaga acaba de confirmar su pedido &nbsp;&nbsp;&nbsp;
+  </div>
+</div>
+
+<!-- FAQ -->
+<section style="padding:80px 8vw;background:var(--cream);max-width:800px;margin:0 auto;">
+  <div style="text-align:center;margin-bottom:48px;">
+    <div class="section-eyebrow">Preguntas frecuentes</div>
+    <h2 class="section-title">Todo lo que necesitas<br><em style="font-style:italic;color:var(--forest);">saber</em></h2>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:16px;">
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        <span>¿Y si no me gusta la almohada?</span><span class="faq-arrow">▼</span>
+      </div>
+      <div class="faq-a">Tienes 30 días para devolverla sin preguntas y sin coste. Si no descansas mejor, te devolvemos el dinero.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        <span>¿Cuánto tarda en llegar?</span><span class="faq-arrow">▼</span>
+      </div>
+      <div class="faq-a">Entregamos en 48–72 horas a toda España peninsular. Recibirás un SMS con el seguimiento de tu pedido.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        <span>¿Cómo funciona el pago contra reembolso?</span><span class="faq-arrow">▼</span>
+      </div>
+      <div class="faq-a">Pagas en efectivo cuando el mensajero te entrega el paquete. No necesitas tarjeta ni datos bancarios. Sin riesgo.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        <span>¿Para quién es NeckZen?</span><span class="faq-arrow">▼</span>
+      </div>
+      <div class="faq-a">Para cualquier persona que se despierte con dolor de cuello, rigidez matutina, o que simplemente quiera dormir mejor. Es especialmente recomendada para personas que duermen de lado o boca arriba.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        <span>¿La funda se puede lavar?</span><span class="faq-arrow">▼</span>
+      </div>
+      <div class="faq-a">Sí. La funda Ice Silk se desmonta con cremallera y va perfectamente a la lavadora. El núcleo de memory foam se limpia con un paño húmedo.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CREDIBILITY BAR -->
+<section style="background:var(--warm);padding:40px 8vw;text-align:center;border-top:1px solid rgba(0,0,0,.06);">
+  <p style="font-size:12px;letter-spacing:.15em;text-transform:uppercase;color:#999;font-weight:600;margin-bottom:24px;">Certificaciones y calidad</p>
+  <div style="display:flex;justify-content:center;align-items:center;gap:40px;flex-wrap:wrap;">
+    <div style="text-align:center;opacity:.7;">
+      <div style="font-size:28px;margin-bottom:6px;">🏆</div>
+      <div style="font-size:11px;font-weight:700;color:#555;letter-spacing:.05em;">CERTIPUR-US</div>
+      <div style="font-size:10px;color:#999;">Espuma certificada</div>
+    </div>
+    <div style="text-align:center;opacity:.7;">
+      <div style="font-size:28px;margin-bottom:6px;">🌿</div>
+      <div style="font-size:11px;font-weight:700;color:#555;letter-spacing:.05em;">OEKO-TEX 100</div>
+      <div style="font-size:10px;color:#999;">Sin sustancias nocivas</div>
+    </div>
+    <div style="text-align:center;opacity:.7;">
+      <div style="font-size:28px;margin-bottom:6px;">⭐</div>
+      <div style="font-size:11px;font-weight:700;color:#555;letter-spacing:.05em;">4.9 / 5 ESTRELLAS</div>
+      <div style="font-size:10px;color:#999;">+3.800 opiniones</div>
+    </div>
+    <div style="text-align:center;opacity:.7;">
+      <div style="font-size:28px;margin-bottom:6px;">🔒</div>
+      <div style="font-size:11px;font-weight:700;color:#555;letter-spacing:.05em;">PAGO SEGURO</div>
+      <div style="font-size:10px;color:#999;">Contra reembolso</div>
+    </div>
+    <div style="text-align:center;opacity:.7;">
+      <div style="font-size:28px;margin-bottom:6px;">↩️</div>
+      <div style="font-size:11px;font-weight:700;color:#555;letter-spacing:.05em;">30 DÍAS</div>
+      <div style="font-size:10px;color:#999;">Devolución gratis</div>
+    </div>
+  </div>
+</section>
+
 <footer>
   <div style="margin-bottom:12px;font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:rgba(255,255,255,.7);">NeckZen<sup>®</sup></div>
   <p>© 2025 NeckZen. Todos los derechos reservados.</p>
@@ -545,6 +656,52 @@
     entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});
   },{threshold:0.1});
   document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
+
+  // COUNTDOWN TIMER
+  function updateCountdown(){
+    const now=new Date();
+    const end=new Date();
+    end.setHours(23,59,59,0);
+    let diff=Math.max(0,end-now);
+    const h=Math.floor(diff/3600000).toString().padStart(2,'0');
+    const m=Math.floor((diff%3600000)/60000).toString().padStart(2,'0');
+    const s=Math.floor((diff%60000)/1000).toString().padStart(2,'0');
+    const el=document.getElementById('countdown');
+    if(el) el.textContent=h+':'+m+':'+s;
+  }
+  updateCountdown();
+  setInterval(updateCountdown,1000);
+
+  // STOCK COUNTER - slowly decreases
+  let stock=7;
+  setInterval(()=>{
+    if(stock>3 && Math.random()<0.3){
+      stock--;
+      const el=document.getElementById('stock-count');
+      if(el) el.textContent=stock;
+    }
+  },45000);
+
+  // LIVE VIEWERS - fluctuates randomly
+  let viewers=23;
+  setInterval(()=>{
+    viewers+=Math.floor(Math.random()*3)-1;
+    viewers=Math.max(14,Math.min(38,viewers));
+    const el=document.getElementById('viewer-count');
+    if(el) el.textContent=viewers;
+  },4000);
+
+  // FAQ TOGGLE
+  function toggleFaq(el){
+    const item=el.parentElement;
+    const isOpen=item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i=>i.classList.remove('open'));
+    if(!isOpen) item.classList.add('open');
+  }
+
+  // RECENT ORDERS TICKER - duplicate content for seamless loop
+  const ticker=document.getElementById('ticker-content');
+  if(ticker) ticker.innerHTML+=ticker.innerHTML;
 </script>
 </body>
 </html>
