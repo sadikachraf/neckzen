@@ -694,9 +694,42 @@
   }
   function handleSubmit(e){
     e.preventDefault();
-    document.getElementById('order-form').style.display='none';
-    document.getElementById('success-msg').classList.add('show');
-    // TODO: POST to CODGrow webhook
+    const form = document.getElementById('order-form');
+    const btn = document.querySelector('.submit-btn');
+    btn.textContent = '⏳ Enviando pedido...';
+    btn.disabled = true;
+
+    const offerLabels = {
+      1: '1 Almohada — Individual',
+      2: 'Pack Pareja — 2 almohadas',
+      3: 'Pack Familia — 3+1 GRATIS',
+      4: 'Pack Total — 5+1 GRATIS'
+    };
+    const offerPrices = {1:'59€', 2:'79€', 3:'99€', 4:'129€'};
+
+    const params = new URLSearchParams({
+      nombre: form.nombre.value,
+      telefono: form.telefono.value,
+      direccion: form.direccion.value,
+      ciudad: form.ciudad.value,
+      cp: form.cp.value,
+      provincia: form.provincia.value,
+      oferta: offerLabels[selectedOffer],
+      precio: offerPrices[selectedOffer]
+    });
+
+    const url = 'https://script.google.com/macros/s/AKfycbyq0QGs3Z5v-8g_3CtDLspw79Ypb1gEdK7h0xJb4vByeZUt4BMWtKR4p7fXJYu757EXog/exec?' + params.toString();
+
+    const iframe = document.createElement('iframe');
+    iframe.style.display = 'none';
+    iframe.src = url;
+    document.body.appendChild(iframe);
+
+    setTimeout(() => {
+      form.style.display = 'none';
+      document.getElementById('success-msg').classList.add('show');
+      document.body.removeChild(iframe);
+    }, 2000);
   }
   const obs=new IntersectionObserver(entries=>{
     entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});
