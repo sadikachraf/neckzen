@@ -734,6 +734,13 @@ src="https://www.facebook.com/tr?id=778731385018899&ev=PageView&noscript=1"/></n
   };
   let selectedOffer = 2;
   const offerValues = {1:59, 2:79, 3:99, 4:129};
+  const offerLabels = {
+    1:'1 Almohada — Individual',
+    2:'Pack Pareja — 2 almohadas',
+    3:'Pack Familia — 3+1 GRATIS',
+    4:'Pack Total — 5+1 GRATIS'
+  };
+  const offerPrices = {1:'59€',2:'79€',3:'99€',4:'129€'};
 
   function selectOffer(n){
     selectedOffer=n;
@@ -754,14 +761,6 @@ src="https://www.facebook.com/tr?id=778731385018899&ev=PageView&noscript=1"/></n
     const btn = document.querySelector('.submit-btn');
     btn.textContent = '⏳ Enviando pedido...';
     btn.disabled = true;
-
-    const offerLabels = {
-      1: '1 Almohada — Individual',
-      2: 'Pack Pareja — 2 almohadas',
-      3: 'Pack Familia — 3+1 GRATIS',
-      4: 'Pack Total — 5+1 GRATIS'
-    };
-    const offerPrices = {1:'59€', 2:'79€', 3:'99€', 4:'129€'};
 
     const params = new URLSearchParams({
       nombre: form.nombre.value,
